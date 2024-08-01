@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
         @csrf
 
         
@@ -23,7 +23,7 @@
             <x-text-input id="avatar" class="block mt-1 w-full" type="file" name="avatar" :value="old('avatar')" required autofocus autocomplete="avatar" />
             <x-input-error :messages="$errors->get('avatar')" class="mt-2" />
         </div>
-        
+
         <!-- Phone number -->
         <div>
             <x-input-label for="phone_number" :value="__('Phone Number')" />
