@@ -1,11 +1,19 @@
-<?php
+ <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Category;
+use App\Models\PackageBanks;
+use App\Models\PackageBooking;
+use App\Models\PackageTour;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[FrontController::class, 'index'])->name('front.index');
+Route::get('/category/{category:slug}',[FrontController::class, 'category'])->name('front.category');
+Route::get('/details/{packageTour:slug}',[FrontController::class, 'details'])->name('front.details');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -15,6 +23,65 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // customer
+    Route::middleware('can:checkout package')->group(function(){
+        // booking
+        Route::get('/book/{packageTour:slug}', [FrontController::class, 'book'])
+            ->name('front.book'); 
+
+        Route::post('/book/save/{packageTour:slug}', [FrontController::class, 'book_store'])
+            ->name('front.book.store'); 
+
+            // banks
+        Route::get('/book/choose-bank/{packageBooking}/', [FrontController::class, 'choose_bank'])
+            ->name('front.choose_bank'); 
+
+        Route::patch('/book/choose-bank/{packageBooking}/save', [FrontController::class, 'choose_bank_store'])
+            ->name('front.book.store'); 
+
+            // payment
+        Route::get('/book/paymaet/{packageBooking}/', [FrontController::class, 'book_payment'])
+            ->name('front.payment');
+
+        Route::patch('/book/payment/{packageTour:slug}', [FrontController::class, 'book_payment_store'])
+            ->name('front.payment.store'); 
+
+        Route::get('/book-finish', [FrontController::class, 'book_finish'])
+            ->name('front.book_finish'); 
+    });
+
+    // bertujuan untuk ketika mau booking harus login terlebi dahulu
+    Route::prefix('dashboard')->name('dashboard.')->group(function(){
+        Route::middleware('can:view orders')->group(function(){
+            Route::get('/my-bookings',[DashboardController::class, 'my_bookings'])
+            ->name('bookings');
+            
+            Route::get('/my-bookings/details/{packageBooking}',[DashboardController::class, 'booking_details'])
+            ->name('booking.details');
+
+        });
+    });
+
+    // Admin
+    Route::prefix('admin')->name('admin.')->group( function (){
+        Route::middleware('can:manage categories')->group(function(){
+            Route::resource('categories', CategoryController::class);
+        });
+
+        Route::middleware('can:manage packages')->group( function(){
+            Route::resource('package_tours', PackageTour::class);
+        });
+
+        Route::middleware('can:manage package banks')->group( function(){
+            Route::resource('package_banks', PackageBanks::class);
+        });
+
+        Route::middleware('can:manage transactions')->group(function(){
+            Route::resource('package_bookings', PackageBooking::class);
+        });
+    });
 });
+
 
 require __DIR__.'/auth.php';
