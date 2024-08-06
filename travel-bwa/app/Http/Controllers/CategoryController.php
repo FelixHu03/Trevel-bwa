@@ -32,22 +32,24 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request)
     {
-        // 1) data akan di validasi sudah di lakukan di folder request
-        // 2) jika lulus validasi, maka mulai proses penyimpanan
-        DB::transaction(function () use($request){
+        // 1) Data akan divalidasi sudah dilakukan di StoreCategoryRequest
+        // 2) Jika lulus validasi, maka mulai proses penyimpanan
+        DB::transaction(function () use ($request) {
 
-        $validate = $request->validate();
-        if ($request->hasFile('icon')) {
-            $iconPath = $request->file('icon')->store('icons', 'public');
-            $validate['icon'] = $iconPath;
-        }
+            $validated = $request->validated();
 
-        $validate['slug'] = Str::slug($validate['name']);
+            if ($request->hasFile('icon')) {
+                $iconPath = $request->file('icon')->store('icons', 'public');
+                $validated['icon'] = $iconPath;
+            }
 
-        $newCategory = Category::created($validate);
+            $validated['slug'] = Str::slug($validated['name']);
+
+            $newCategory = Category::create($validated);
         });
-    }
 
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan.');
+    }
     /**
      * Display the specified resource.
      */
