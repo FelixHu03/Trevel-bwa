@@ -12,7 +12,8 @@ class PackageBanksController extends Controller
      */
     public function index()
     {
-        //
+        $banks = packageBanks::orderByDesc('id')->paginate(5);
+        return view('admin.banks.index', compact('banks'));
     }
 
     /**
@@ -20,8 +21,9 @@ class PackageBanksController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.banks.create');
     }
+        
 
     /**
      * Store a newly created resource in storage.
