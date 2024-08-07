@@ -3,6 +3,9 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\PackageBankController;
+use App\Http\Controllers\PackageBookingController;
+use App\Http\Controllers\PackageTourController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Category;
 use App\Models\PackageBanks;
@@ -70,15 +73,15 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::middleware('can:manage packages')->group( function(){
-            Route::resource('package_tours', PackageTour::class);
+            Route::resource('package_tours', PackageTourController::class);
         });
 
         Route::middleware('can:manage package banks')->group( function(){
-            Route::resource('package_banks', PackageBanks::class);
+            Route::resource('package_banks', PackageBankController::class);
         });
 
         Route::middleware('can:manage transactions')->group(function(){
-            Route::resource('package_bookings', PackageBooking::class);
+            Route::resource('package_bookings', PackageBookingController::class);
         });
     });
 });

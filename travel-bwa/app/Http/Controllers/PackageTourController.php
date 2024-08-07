@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PackageBanks;
 use App\Models\PackageTour;
 use Illuminate\Http\Request;
 

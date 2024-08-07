@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PackageBanks extends Model
 {
-    
     use HasFactory, SoftDeletes;
-
+    
     protected $fillable =[
         'bank_name',
         'bank_account_name',
@@ -18,3 +17,4 @@ class PackageBanks extends Model
         'logo'
     ];
 }
+
