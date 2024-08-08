@@ -44,8 +44,7 @@ class PackageBankController extends Controller
             $newBank = PackageBanks::create($validated);
         });
 
-        return redirect()->route('admin.banks.index');
- 
+        return redirect()->route('admin.package_banks.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
     /**
@@ -59,40 +58,32 @@ class PackageBankController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PackageBanks $packageBanks)
+    public function edit(PackageBanks $packageBank)
     {
-        return view('admin.banks.edit', compact('packageBanks'));
-
+        return view('admin.banks.edit', compact('packageBank'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatePackageBankRequest $request, PackageBanks $packageBanks)
+    public function update(UpdatePackageBankRequest $request, PackageBanks $packageBank)
     {
-        DB::transaction(function () use ($request,$packageBanks) {
-
+        DB::transaction(function () use ($request, $packageBank) {
             $validated = $request->validated();
 
             if ($request->hasFile('logo')) {
                 $logoPath = $request->file('logo')->store('logos', 'public');
                 $validated['logo'] = $logoPath;
             }
-            $packageBanks->update($validated);
+            $packageBank->update($validated);
         });
 
-        return redirect()->route('admin.banks.index')->with('success', 'Kategori berhasil ditambahkan.');
+        return redirect()->route('admin.package_banks.index')->with('success', 'Bank berhasil diupdate.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PackageBanks $packageBanks)
+    public function destroy(PackageBanks $packageBank)
     {
-        DB::transaction(function() use($packageBanks){
-            $packageBanks->delete();
+        DB::transaction(function () use ($packageBank) {
+            $packageBank->delete();
         });
-        return redirect()->route('admin.banks.index');
 
+        return redirect()->route('admin.package_banks.index');
     }
 }
