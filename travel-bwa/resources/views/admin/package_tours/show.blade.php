@@ -14,25 +14,29 @@
 
                 <div class="item-card flex flex-row justify-between items-center">
                     <div class="flex flex-row items-center gap-x-3">
-                        <img src="#" alt="" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                        <img src="{{ Storage::url($packageTour->thumbnail)}}" alt="" class="rounded-2xl object-cover w-[120px] h-[90px]">
                         <div class="flex flex-col">
-                            <h3 class="text-indigo-950 text-xl font-bold">lorem</h3>
-                        <p class="text-slate-500 text-sm">category</p>
+                            <h3 class="text-indigo-950 text-xl font-bold">
+                                {{ $packageTour->name }}
+                            </h3>
+                        <p class="text-slate-500 text-sm">
+                            {{ $packageTour->category->name }}
+                        </p>
                         </div>
                     </div> 
                     <div  class="hidden md:flex flex-col">
                         <p class="text-slate-500 text-sm">Price</p>
-                        <h3 class="text-indigo-950 text-xl font-bold">Rp 123,421</h3>
+                        <h3 class="text-indigo-950 text-xl font-bold">Rp {{ number_format($packageTour->price,0,',','.') }}</h3>
                     </div>
                     <div  class="hidden md:flex flex-col">
-                        <p class="text-slate-500 text-sm">Total Days</p>
-                        <h3 class="text-indigo-950 text-xl font-bold">11 Days</h3>
+                        <p class="text-slate-500 text-sm"> Total Days</p>
+                        <h3 class="text-indigo-950 text-xl font-bold">{{ $packageTour->days }} Days</h3>
                     </div>
                     <div class="hidden md:flex flex-row items-center gap-x-3">
-                        <a href="#" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                        <a href="{{ route('admin.package_tours.edit',$packageTour) }}" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
                             Edit
                         </a>
-                        <form action="#" method="POST">
+                        <form action="{{ route('admin.package_tours.destroy',$packageTour) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="font-bold py-4 px-6 bg-red-700 text-white rounded-full">
@@ -46,17 +50,21 @@
                 <h3 class="text-indigo-950 text-xl font-bold">Gallery Photos</h3>
 
                 <div class="flex flex-row gap-x-5">
-
-                        <img src="#" alt="" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                    @forelse ($latesPhotos as $photo)
+                        
+                    <img src="{{ Storage::url($photo->photo) }}" alt="" class="rounded-2xl object-cover w-[120px] h-[90px]">
+                    @empty
+                    <p>Belum ada foto yang di upload</p>
+                    @endforelse
 
 
                 </div>
 
                 <div>
                     <h3 class="text-indigo-950 text-xl font-bold">About</h3>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta porro, minima rerum laboriosam quas veritatis nam iste aspernatur architecto! Expedita repudiandae libero voluptates fugiat, aliquam impedit voluptate nisi consequuntur necessitatibus.
-                </p>
+                <article>
+                    {{ $packageTour->about }}
+                </article>
                 </div>
 
             </div>

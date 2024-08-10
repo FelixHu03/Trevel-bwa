@@ -28,7 +28,7 @@ class PackageTourController extends Controller
     public function create()
     {
         $categories = Category::orderByDesc('id')->get();
-        return view('admin.package_tours.create',compact('categories'));
+        return view('admin.package_tours.create', compact('categories'));
     }
 
     /**
@@ -36,19 +36,19 @@ class PackageTourController extends Controller
      */
     public function store(StorePackageTourRequest $request)
     {
-        DB::transaction(function() use($request){
+        DB::transaction(function () use ($request) {
             $validated = $request->validated();
 
-            if($request->hasFile('thumbnail')){
+            if ($request->hasFile('thumbnail')) {
                 $thumbnailPath = $request->file('thumbnail')->store('thumbnails/' . date('Y/m/d'), 'public');
                 $validated['thumbnail'] = $thumbnailPath;
             }
-            
+
             $validated['slug'] = Str::slug($validated['name']);
             $packageTour = PackageTour::create($validated);
 
-            if($request->hasFile('photos')){
-                foreach($request->file('photos') as $photo){
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
 
                     $photoPath = $photo->store('packagee_photos/' . date('Y/m/d'), 'public');
                     $packageTour->package_photos()->create([
@@ -56,7 +56,6 @@ class PackageTourController extends Controller
                     ]);
                 }
             }
-
         });
         return redirect()->route('admin.package_tours.index');
     }
@@ -66,15 +65,20 @@ class PackageTourController extends Controller
      */
     public function show(PackageTour $packageTour)
     {
-        return redirect()->route('admin.package_tours.edit');
+        $latesPhotos = $packageTour->package_photos()->orderByDesc('id')->take(3)->get();
+        return view('admin.package_tours.show', compact('packageTour', 'latesPhotos'));
     }
+
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(PackageTour $packageTour)
     {
-        return view('admin.package_tour.edit', compact('pakageTour'));
+        $latesPhotos = $packageTour->package_photos()->orderByDesc('id')->take(3)->get();
+        $categories = Category::orderByDesc('id')->get();
+        return view('admin.package_tours.edit', compact('packageTour', 'latesPhotos', 'categories'));
     }
 
     /**
@@ -82,18 +86,30 @@ class PackageTourController extends Controller
      */
     public function update(UpdatePackageTourRequest $request, PackageTour $packageTour)
     {
-        DB::transaction(function() use($request, $packageTour){
+        DB::transaction(function () use ($request, $packageTour) {
             $validated = $request->validated();
 
-            if($request->hasFile('thumbnail')){
+            if ($request->hasFile('thumbnail')) {
                 $thumbnailPath = $request->file('thumbnail', 'public');
                 $validated['thumbnail'] = $thumbnailPath;
+            }
+
+            $validated['slug'] = str::slug($validated['name']);
+            $packageTour->update($validated);
+
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+
+                    $photoPath = $photo->store('packagee_photos/' . date('Y/m/d'), 'public');
+                    $packageTour->package_photos()->create([
+                        'photo' => $photoPath
+                    ]);
+                }
             }
 
             $packageTour->update($validated);
         });
         return redirect()->route('admin.package_tours.index');
-    
     }
 
     /**
@@ -101,9 +117,9 @@ class PackageTourController extends Controller
      */
     public function destroy(PackageTour $packageTour)
     {
-       DB::transaction(function() use($packageTour){
-        $packageTour->delete();
-       }); 
-       return redirect()->route('admin.package_tours.index');
+        DB::transaction(function () use ($packageTour) {
+            $packageTour->delete();
+        });
+        return redirect()->route('admin.package_tours.index');
     }
 }
