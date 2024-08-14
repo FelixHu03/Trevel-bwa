@@ -1,10 +1,11 @@
 function calculatePrice(){
     let subTotal = 0;
     let quantity = parseInt(document.getElementById('quantity').textContent);
+    let packageTourPrice = parseInt(document.getElementById('packageTourPrice').value);
     let insurance = 300000;
     let taxRate = 0.10; // Assuming a tax rate of 10%
 
-    const tourPrice = 900000;
+    const tourPrice = packageTourPrice;
     subTotal = tourPrice * quantity;
     const totalInsurance = insurance * quantity;
     const totalTax = subTotal * taxRate;

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PackagePhoto;
 use App\Models\PackageTour;
 use App\Models\User;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\FuncCall;
 
 class FrontController extends Controller
 {
@@ -15,6 +17,14 @@ class FrontController extends Controller
     {
         $package_tours = PackageTour::orderByDesc('id')->take(3)->get();
         return view('front.index', compact('package_tours'));
+    }
+
+    public function details(PackageTour $packageTour){
+        $photos = $packageTour->package_photos()->orderByDesc('id')->take(3)->get();
+        return view('front.details', compact('packageTour', 'photos'));
+    }
+    public function book(PackageTour $packageTour){
+        return view('front.book', compact('packageTour'));
     }
 
     /**
