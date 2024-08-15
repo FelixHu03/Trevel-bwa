@@ -10,16 +10,17 @@
     <section id="content" class="max-w-[640px] w-full mx-auto bg-[#F9F2EF] min-h-screen flex flex-col gap-8 pb-[120px]">
         <nav class="mt-8 px-4 w-full flex items-center justify-between">
           <a href="details.html">
-            <img src="{{asset('assets/icons/back.png')}}" alt="back">
+            <img src="{{asset('assets/icons/back.png')}}" alt="back" >
           </a>
           <p class="text-center m-auto font-semibold">Booking</p>
           <div class="w-12"></div>
         </nav>
-        <form action="checkout.html" class="flex flex-col gap-8">
+        <form action="{{ route('front.book.store',$packageTour->slug) }}" class="flex flex-col gap-8" method="POST">
+          @csrf
           <div class="flex flex-col gap-3 px-4 ">
             <p class="font-semibold">Start Date</p>
             <div class="flex items-center gap-[10px] bg-white p-[16px_24px] rounded-[37px]  transition-all duration-300">
-              <input type="date" name="" id="" class="appearance-none outline-none w-full relative text-sm tracking-035 leading-[22px] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:opacity-0">
+              <input type="date" name="start_date" id="start_date" class="appearance-none outline-none w-full relative text-sm tracking-035 leading-[22px] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:opacity-0">
               <div class="w-6 h-6 flex shrink-0">
                 <img src="{{asset('assets/icons/calendar-blue.svg')}}" class="w-full h-full" alt="icon">
               </div>

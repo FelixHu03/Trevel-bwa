@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
             ->name('front.choose_bank'); 
 
         Route::patch('/book/choose-bank/{packageBooking}/save', [FrontController::class, 'choose_bank_store'])
-            ->name('front.book.store'); 
+            ->name('front.choose_book_store'); 
 
             // payment
         Route::get('/book/paymaet/{packageBooking}/', [FrontController::class, 'book_payment'])
