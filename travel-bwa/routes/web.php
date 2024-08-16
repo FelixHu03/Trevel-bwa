@@ -40,15 +40,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/book/choose-bank/{packageBooking}/', [FrontController::class, 'choose_bank'])
             ->name('front.choose_bank'); 
 
-        Route::patch('/book/choose-bank/{packageBooking}/save', [FrontController::class, 'choose_bank_store'])
-            ->name('front.choose_book_store'); 
+            Route::patch('/book/choose-bank/{packageBooking}/save', [FrontController::class, 'choose_bank_store'])
+            ->name('front.choose_bank_store');
+        
 
             // payment
-        Route::get('/book/paymaet/{packageBooking}/', [FrontController::class, 'book_payment'])
-            ->name('front.payment');
+        Route::get('/book/paymant/{packageBooking}/', [FrontController::class, 'book_payment'])
+            ->name('front.book_payment');
 
         Route::patch('/book/payment/{packageTour:slug}', [FrontController::class, 'book_payment_store'])
-            ->name('front.payment.store'); 
+            ->name('front.book_payment_store'); 
 
         Route::get('/book-finish', [FrontController::class, 'book_finish'])
             ->name('front.book_finish'); 

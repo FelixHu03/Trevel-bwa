@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePackageBookingCheckoutRequest;
 use App\Http\Requests\StorePackageBookingRequest;
+use App\Http\Requests\UpdatePackageBookingRequest;
 use App\Models\PackageBanks;
 use App\Models\PackageBooking;
 use App\Models\PackagePhoto;
@@ -12,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Expr\FuncCall;
 
 class FrontController extends Controller
@@ -76,6 +79,57 @@ class FrontController extends Controller
         }else{
             return back()->withErrors('Failed to create booking.');
         }
+    }
+    public function choose_bank(PackageBooking $packageBooking){
+        $user = Auth::user();
+        if($packageBooking-> user_id != $user->id){
+            abort(403);
+        }
+        $banks = PackageBanks::all();
+        return view('front.choose_bank', compact('banks', 'packageBooking'));
+    }
+    public function choose_bank_store(UpdatePackageBookingRequest $request, PackageBooking $packageBooking){
+        $user = Auth::user();
+        if($packageBooking-> user_id != $user->id){
+            abort(403);
+        }
+        DB::transaction(function() use($request, $packageBooking){
+            $validated = $request->validated();
+            $packageBooking->update([
+                'package_bank_id'=> $validated['package_bank_id'],
+
+            ]);
+        });
+        return redirect()->route('front.book_payment', $packageBooking->id);
+    }
+    public function book_payment(PackageBooking $packageBooking){
+        $user = Auth::user();
+        if ($packageBooking->user_id != $user->id) {
+            abort(403);
+        }
+        
+        return view('front.book_payment', compact('packageBooking'));
+    }
+    public function book_payment_store(StorePackageBookingCheckoutRequest $request, PackageBooking $packageBooking) {
+        $user = Auth::user();
+        if ($packageBooking->user_id != $user->id) {
+            abort(403);
+        }
+        
+        DB::transaction(function () use($request, $user, $packageBooking) {
+            $validated = $request->validated();
+            if ($request->hasFile('proof')) {
+                $proofPath = $request->file('proof')->store('proofs', 'public');
+                $validated['proof'] = $proofPath;
+            }
+            $packageBooking->update($validated);
+        });
+    
+        return redirect()->route('front.book_finish');
+    }
+    
+    public function book_finish(){
+        return view('front.book_finish');
     }
     /**
      * Show the form for creating a new resource.
