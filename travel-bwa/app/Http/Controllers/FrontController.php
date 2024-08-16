@@ -103,19 +103,14 @@ class FrontController extends Controller
         return redirect()->route('front.book_payment', $packageBooking->id);
     }
     public function book_payment(PackageBooking $packageBooking){
-        $user = Auth::user();
-        if ($packageBooking->user_id != $user->id) {
-            abort(403);
-        }
-        
         return view('front.book_payment', compact('packageBooking'));
     }
+
     public function book_payment_store(StorePackageBookingCheckoutRequest $request, PackageBooking $packageBooking) {
         $user = Auth::user();
-        if ($packageBooking->user_id != $user->id) {
+        if($packageBooking-> user_id != $user->id){
             abort(403);
         }
-        
         DB::transaction(function () use($request, $user, $packageBooking) {
             $validated = $request->validated();
             if ($request->hasFile('proof')) {
@@ -124,7 +119,6 @@ class FrontController extends Controller
             }
             $packageBooking->update($validated);
         });
-    
         return redirect()->route('front.book_finish');
     }
     

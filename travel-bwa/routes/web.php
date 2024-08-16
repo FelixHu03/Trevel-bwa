@@ -35,15 +35,12 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/book/save/{packageTour:slug}', [FrontController::class, 'book_store'])
             ->name('front.book.store'); 
-
             // banks
         Route::get('/book/choose-bank/{packageBooking}/', [FrontController::class, 'choose_bank'])
             ->name('front.choose_bank'); 
 
             Route::patch('/book/choose-bank/{packageBooking}/save', [FrontController::class, 'choose_bank_store'])
             ->name('front.choose_bank_store');
-        
-
             // payment
         Route::get('/book/paymant/{packageBooking}/', [FrontController::class, 'book_payment'])
             ->name('front.book_payment');
