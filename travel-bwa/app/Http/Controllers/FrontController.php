@@ -108,7 +108,7 @@ class FrontController extends Controller
 
     public function book_payment_store(StorePackageBookingCheckoutRequest $request, PackageBooking $packageBooking) {
         $user = Auth::user();
-        if($packageBooking-> user_id != $user->id){
+        if($packageBooking->user_id != $user->id){
             abort(403);
         }
         DB::transaction(function() use ($request, $packageBooking, $user) {
