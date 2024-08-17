@@ -23,28 +23,22 @@ class RolePermissionSeeder extends Seeder
             'checkout package',
             'view orders',
         ];
-
         foreach ($permissions as $permission){
             Permission::firstOrCreate([
                 'name' => $permission
             ]);
         }
-
         $customerRole = Role::firstOrCreate([
             'name' => 'customer'
         ]);
-
         $customerPermissions = [
             'checkout package',
             'view orders'
         ];
-
         $customerRole->syncPermissions($customerPermissions);
-
         $superAdminRole = Role::firstOrCreate([
             'name' => 'super_admin'
         ]);
-
         $user = User::create([
             'name' => "Super Admin",
             'email' => "super@admin.com",

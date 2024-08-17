@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\SupportFacadesRoute;
 use App\Http\Requests\StorePackageBookingCheckoutRequest;
 use App\Http\Requests\StorePackageBookingRequest;
 use App\Http\Requests\UpdatePackageBookingRequest;
@@ -81,7 +82,7 @@ class FrontController extends Controller
         }
     }
     public function choose_bank(PackageBooking $packageBooking){
-        $user = Auth::user();
+        $user = Auth::User();
         if($packageBooking-> user_id != $user->id){
             abort(403);
         }
@@ -93,11 +94,10 @@ class FrontController extends Controller
         if($packageBooking-> user_id != $user->id){
             abort(403);
         }
-        DB::transaction(function() use($request, $packageBooking){
+        DB::transaction(function() use($request, $packageBooking, $user){
             $validated = $request->validated();
             $packageBooking->update([
                 'package_bank_id'=> $validated['package_bank_id'],
-
             ]);
         });
         return redirect()->route('front.book_payment', $packageBooking->id);
@@ -111,7 +111,7 @@ class FrontController extends Controller
         if($packageBooking-> user_id != $user->id){
             abort(403);
         }
-        DB::transaction(function () use($request, $user, $packageBooking) {
+        DB::transaction(function() use ($request, $packageBooking, $user) {
             $validated = $request->validated();
             if ($request->hasFile('proof')) {
                 $proofPath = $request->file('proof')->store('proofs', 'public');
@@ -125,51 +125,4 @@ class FrontController extends Controller
     public function book_finish(){
         return view('front.book_finish');
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(frontcontroller $frontcontroller)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(frontcontroller $frontcontroller)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, frontcontroller $frontcontroller)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(frontcontroller $frontcontroller)
-    {
-        //
-    }
-}
+  }

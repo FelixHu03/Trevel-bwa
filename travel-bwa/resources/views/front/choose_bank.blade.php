@@ -34,7 +34,7 @@
                   </div>
                   <span class="text-sm tracking-035 leading-[22px]">{{ $bank->bank_name }}</span>
                 </div>
-                <input type="radio"   value="{{ $bank->id }}" name="package_bank_id"  id="{{ $bank->id }}" class="w-5 h-5 appearance-none checked:border-[3px] checked:border-solid checked:border-white rounded-full checked:bg-[#6E5DE7] ring-2 ring-[#6E5DE7]">
+                <input type="radio" value="{{ $bank->id }}" name="package_bank_id"  id="{{ $bank->id }}" class="w-5 h-5 appearance-none checked:border-[3px] checked:border-solid checked:border-white rounded-full checked:bg-[#6E5DE7] ring-2 ring-[#6E5DE7]">
               </label>
             </div>
             @endforeach

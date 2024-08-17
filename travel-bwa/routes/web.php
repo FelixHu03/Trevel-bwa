@@ -42,10 +42,10 @@ Route::middleware('auth')->group(function () {
             Route::patch('/book/choose-bank/{packageBooking}/save', [FrontController::class, 'choose_bank_store'])
             ->name('front.choose_bank_store');
             // payment
-        Route::get('/book/paymant/{packageBooking}/', [FrontController::class, 'book_payment'])
+        Route::get('/book/payment/{packageBooking}/', [FrontController::class, 'book_payment'])
             ->name('front.book_payment');
 
-        Route::patch('/book/payment/{packageTour:slug}', [FrontController::class, 'book_payment_store'])
+        Route::patch('/book/payment/{packageBooking}/save', [FrontController::class, 'book_payment_store'])
             ->name('front.book_payment_store'); 
 
         Route::get('/book-finish', [FrontController::class, 'book_finish'])
