@@ -1,12 +1,5 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="{{ asset('output.css') }}" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-</head>
-<body class="font-poppins text-black">
+@extends('front.layout.app')
+@section('content')
     <section id="content" class="max-w-[640px] w-full mx-auto bg-[#F9F2EF] min-h-screen flex flex-col gap-8 pb-[120px]">
         <nav class="mt-8 px-4 w-full flex items-center justify-between">
           <a href="{{ route('front.details', $packageTour->slug) }}">
@@ -93,7 +86,7 @@
           </div>
         </form>
     </section>
-
+    @endsection
+    @push('after-scripts')
     <script src="{{ asset('js/booking.js') }}"></script>
-</body>
-</html>
+@endpush
