@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PackageBooking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PackageBookingController extends Controller
 {
@@ -12,7 +13,8 @@ class PackageBookingController extends Controller
      */
     public function index()
     {
-        //
+        $packageBooking = PackageBooking::with(['customer', 'tour'])->orderByDesc('id')->paginate(10);
+        return view('admin.package_bookings.index', compact('packageBooking'));
     }
 
     /**
@@ -36,7 +38,8 @@ class PackageBookingController extends Controller
      */
     public function show(PackageBooking $packageBooking)
     {
-        //
+
+        return view('admin.package_bookings.show', compact('packageBooking'));
     }
 
     /**
@@ -52,7 +55,12 @@ class PackageBookingController extends Controller
      */
     public function update(Request $request, PackageBooking $packageBooking)
     {
-        //
+        DB::transaction(function() use ($packageBooking){
+            $packageBooking->update([
+                'is_paid' => true,
+            ]);
+        });
+        return redirect()->route('admin.package_bookings.show', $packageBooking);
     }
 
     /**
